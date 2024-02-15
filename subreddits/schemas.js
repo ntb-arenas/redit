@@ -6,6 +6,11 @@ const idSchema = Joi.string()
   .pattern(/^[0-9a-fA-F]{24}$/)
   .required();
 
+const subredditSchema = Joi.object({
+  name: Joi.string().min(3).required(),
+  description: Joi.string().min(3).required(),
+});
+
 const postSchema = Joi.object({
   title: Joi.string().min(3).required(),
   content: Joi.string().min(3).required(),
@@ -17,6 +22,7 @@ const commentSchema = Joi.object({
 });
 
 module.exports = {
+  subredditSchema,
   idSchema,
   postSchema,
   commentSchema,

@@ -21,15 +21,9 @@ function handleError(error1, error2, res) {
 /*****************************************************************/
 /****************  CREATE A SUBREDDIT COMMUNITY ******************/
 /*****************************************************************/
-// subreddit schema
-const subredditSchema = Joi.object({
-  name: Joi.string().min(3).required(),
-  description: Joi.string().min(3).required(),
-});
-
 router.post("/subreddits", async (req, res) => {
   // Validate the request body against the subreddit schema
-  const { error, value } = subredditSchema.validate(req.body);
+  const { error, value } = schema.subredditSchema.validate(req.body);
   if (error) {
     return res.status(400).json(error.details);
   }
