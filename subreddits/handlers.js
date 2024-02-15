@@ -17,24 +17,43 @@ const subredditSchema = Joi.object({
 });
 
 router.post("/subreddits", async (req, res) => {
+  // Validate the request body against the subreddit schema
   const { error, value } = subredditSchema.validate(req.body);
-
   if (error) {
     return res.status(400).json(error.details);
   }
 
-  const created = await services.create(value);
-
+  // If validation passes, proceed with creating the subreddit
+  const created = await services.createSubreddit(value);
   res.status(201).json(created);
 });
 
-router.post("/subreddits/:subredditId/posts", async (req, res) => {
-  const { subredditId } = req.params;
-  const { title, content } = req.body;
+//check if the input string contains exactly 24 characters, each of which must be a digit (0-9) or a valid hexadecimal character (a-f, A-F)
+//e.g. 65cd56a8df2224917919d0b4
+const subredditIdSchema = Joi.string()
+  .pattern(/^[0-9a-fA-F]{24}$/)
+  .required();
 
-  // const db = client.db('your-database-name');
-  // const post = await db.collection('posts').insertOne({ subredditId: ObjectId(subredditId), title, content });
-  // res.json(post.ops[0]);
+const postsSchema = Joi.object({
+  title: Joi.string().min(3).required(),
+  content: Joi.string().min(3).required(),
+});
+
+router.post("/subreddits/:subredditId/posts", async (req, res) => {
+  // Validate subredditId
+  const { error: subredditIdError, value: subredditIdValue } =
+    subredditIdSchema.validate(req.params.subredditId);
+  if (subredditIdError) {
+    return res.status(400).json(subredditIdError.details);
+  }
+
+  // Validate post details
+  const { error: postsError, value: postsValue } = postsSchema.validate(
+    req.body
+  );
+  if (postsError) {
+    return res.status(400).json(postsError.details);
+  }
 });
 
 module.exports = router;
