@@ -37,9 +37,19 @@ async function createComment(id, newComment) {
   return newCommentId;
 }
 
+function getAllComments(id) {
+  return data.getAllComments(id);
+}
+
+function updatePost(id, newPost) {
+  return data.updatePost(id, newPost);
+}
+
 module.exports = {
   createSubreddit,
   createPost,
   getAllPosts,
   createComment,
+  getAllComments,
+  updatePost,
 };

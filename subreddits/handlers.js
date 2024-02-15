@@ -61,7 +61,7 @@ router.post("/subreddits/:subredditId/posts", async (req, res) => {
 });
 
 /*****************************************************************/
-/********  LIST POSTS BY SUBREDDIT ID **************/
+/*****************  LIST POSTS BY SUBREDDIT ID *******************/
 /*****************************************************************/
 router.get("/subreddits/:subredditId/posts", async (req, res) => {
   const { error, value } = schema.idSchema.validate(req.params.subredditId);
@@ -85,15 +85,47 @@ router.post("/posts/:postId/comments", async (req, res) => {
     schema.commentSchema.validate(req.body);
 
   if (postIdError || commentError) {
+    // returns 400 status response with the errors as JSON
     return handleError(postIdError, commentError, res);
   }
-
-  // If there are errors related to post ID or comments, constructs an errors object containing
-  // their details and sends a 400 status response with the errors as JSON.
 
   // If validation passes, proceed with creating the subreddit
   const created = await services.createComment(postId, commentValue);
   res.status(201).json(created);
+});
+
+/*****************************************************************/
+/*****************  LIST COMMENTS BY POST ID *******************/
+/*****************************************************************/
+router.get("/posts/:postId/comments", async (req, res) => {
+  const { error, value } = schema.idSchema.validate(req.params.postId);
+
+  if (error) {
+    return res.status(400).json(error.details);
+  }
+
+  const result = await services.getAllComments(value);
+  res.json(result);
+});
+
+/*****************************************************************/
+/************************  EDIT POST  ****************************/
+/*****************************************************************/
+router.put("/posts/:postId", async (req, res) => {
+  const { error: postIdError, value: postId } = schema.idSchema.validate(
+    req.params.postId
+  );
+  const { error: postsError, value: postsValue } = schema.postSchema.validate(
+    req.body
+  );
+
+  if (postIdError || postsError) {
+    // returns 400 status response with the errors as JSON
+    return handleError(postIdError, postsError, res);
+  }
+
+  const result = await services.updatePost(postId, postsValue);
+  res.json(result);
 });
 
 module.exports = router;
