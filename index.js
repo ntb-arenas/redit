@@ -3,12 +3,12 @@ require("dotenv").config();
 const pino = require("pino-http");
 const express = require("express");
 const app = express();
-const posts = require("./posts/handlers");
+const subreddits = require("./subreddits/handlers");
 
 app.use(express.json());
 app.use(pino());
 
-app.use(posts);
+app.use(subreddits);
 
 const port = process.env.PORT || 3000;
 

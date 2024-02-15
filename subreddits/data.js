@@ -3,7 +3,14 @@ const { ObjectId } = require("mongodb");
 
 const collection = "subreddit";
 
-async function insert(post) {
+async function insertSubreddit(post) {
+  const db = await getDb();
+  const result = await db.collection(collection).insertOne(post);
+
+  return result.insertedId;
+}
+
+async function insertPost(post) {
   const db = await getDb();
   const result = await db.collection(collection).insertOne(post);
 
@@ -13,6 +20,6 @@ async function insert(post) {
 function find(name) {}
 
 module.exports = {
-  insert,
-  find,
+  insertSubreddit,
+  insertPost,
 };
