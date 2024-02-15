@@ -54,6 +54,10 @@ router.post("/subreddits/:subredditId/posts", async (req, res) => {
   if (postsError) {
     return res.status(400).json(postsError.details);
   }
+
+  // If validation passes, proceed with creating the Post
+  const created = await services.createPost(subredditIdValue, postsValue);
+  res.status(201).json(created);
 });
 
 module.exports = router;
