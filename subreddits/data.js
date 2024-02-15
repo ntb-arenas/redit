@@ -21,9 +21,18 @@ async function insertPost(subredditId, post) {
   return result.insertedId;
 }
 
-function find(name) {}
+async function getAllPosts(id) {
+  const db = await getDb();
+  const result = await db
+    .collection(postsCollection)
+    .find({ subredditId: new ObjectId(id) })
+    .toArray();
+
+  return result;
+}
 
 module.exports = {
   insertSubreddit,
   insertPost,
+  getAllPosts,
 };

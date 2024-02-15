@@ -22,7 +22,12 @@ async function createPost(subredditId, newPost) {
   return newPostId;
 }
 
+function getAllPosts(id) {
+  return data.getAllPosts(id);
+}
+
 module.exports = {
   createSubreddit,
   createPost,
+  getAllPosts,
 };
